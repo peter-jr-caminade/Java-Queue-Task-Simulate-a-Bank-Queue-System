@@ -1,0 +1,111 @@
+import java.util.*;
+
+class Customer {
+    private String name;
+    private int number;
+
+    public Customer(String name, int number) {
+        this.name = name;
+        this.number = number;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public int getNumber() {
+        return number;
+    }
+
+    @Override
+    public String toString() {
+        return "Customer #" + number + ": " + name;
+    }
+}
+
+public class BankQueueSystem {
+
+    private static Queue<Customer> queue = new LinkedList<>();
+
+    private static Scanner scanner = new Scanner(System.in);
+
+    private static int customerNumber = 1;
+
+    public static void main(String[] args) {
+        int choice;
+
+        do {
+            displayMenu();        
+            choice = getUserChoice(); 
+
+            switch (choice) {
+                case 1:
+                    addCustomer();   
+                    break;
+                case 2:
+                    serveCustomer();  
+                    break;
+                case 3:
+                    viewQueue();     
+                    break;
+                case 4:
+                    System.out.println("Exiting the system. Goodbye!");
+                    break;
+                default:
+                    System.out.println("Invalid choice. Please enter a number between 1 and 4.");
+            }
+
+        } while (choice != 4); // Exit when user chooses 4
+    }
+
+    private static void displayMenu() {
+        System.out.println("\n=== Bank Queue System ===");
+        System.out.println("1. Add customer to queue");
+        System.out.println("2. Serve next customer");
+        System.out.println("3. View queue");
+        System.out.println("4. Exit");
+        System.out.print("Enter your choice: ");
+    }
+
+    private static int getUserChoice() {
+        while (!scanner.hasNextInt()) {
+            scanner.next(); // Skip invalid input
+            System.out.print("Please enter a valid number: ");
+        }
+        return scanner.nextInt();
+    }
+
+    private static void addCustomer() {
+        scanner.nextLine(); // Clear the newline from previous input
+        System.out.print("Enter customer's name: ");
+        String name = scanner.nextLine(); // Get customer name
+
+        Customer customer = new Customer(name, customerNumber++);
+        queue.add(customer);
+
+        System.out.println("Customer added to queue: " + customer);
+        viewQueue();
+    }
+
+    private static void serveCustomer() {
+        if (queue.isEmpty()) {
+            System.out.println("No customers in the queue."); // Nothing to serve
+        } else {
+            Customer served = queue.poll(); // Remove and get the front customer
+            System.out.println("Serving: " + served); // Show served customer
+        }
+
+        viewQueue(); // Display the queue after serving
+    }
+
+    private static void viewQueue() {
+        if (queue.isEmpty()) {
+            System.out.println("The queue is currently empty.");
+        } else {
+            System.out.println("\n--- Current Queue ---");
+            for (Customer c : queue) {
+                System.out.println(c); // Print each customer in the queue
+            }
+        }
+    }
+}
